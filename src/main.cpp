@@ -149,7 +149,7 @@ int main(){
             wireFrameShader.setUniformVec3("OFFSET", selectedBlock);
             drawLineIndexed(wireFrameShader, wireFrameVerts, wireFrameIndexes, 24);
             if(glfwGetKey(window, GLFW_KEY_SPACE)){
-                myMap.setBlock(selectedBlock.x, selectedBlock.y, selectedBlock.z, 0);
+                myMap.changeBlock(selectedBlock.x, selectedBlock.y, selectedBlock.z, 0);
             }
 
         } else {
@@ -264,13 +264,13 @@ void mouseCallBack(GLFWwindow *window, int button, int action, int mods){
     if(button == GLFW_MOUSE_BUTTON_LEFT) {
         if(action == 1) {
             glm::vec3 selectedBlock = camera->rayCastToBlock(10, *mainMap); // bad name
-            mainMap->setBlock(selectedBlock.x, selectedBlock.y, selectedBlock.z, 0);
+            mainMap->changeBlock(selectedBlock.x, selectedBlock.y, selectedBlock.z, 0);
         }
     }
     if(button == GLFW_MOUSE_BUTTON_RIGHT) {
         if(action == 1) {
             glm::vec3 selectedBlock = camera->rayCastToPreviousBlock(10, *mainMap); // bad name
-            mainMap->setBlock(selectedBlock.x, selectedBlock.y, selectedBlock.z, 1);
+            mainMap->changeBlock(selectedBlock.x, selectedBlock.y, selectedBlock.z, 1);
         }
     }
 }

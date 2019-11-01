@@ -6,10 +6,12 @@
 #define MINECROFT_CHARACTER_H
 
 
+#include <glm/vec3.hpp>
+
 class Character {
 public:
 private:
-
+    glm::vec3 position;
 };
 
 

@@ -1,1 +1,1 @@
-"# CubeGame" 
+"# CubeGame, like minecraft, but worse"

@@ -65,8 +65,37 @@ char GameMap::valueAt(int x, int y, int z) const{
     chunckArray[chunckOffset.x][chunckOffset.y][chunckOffset.z]->valueAt(gridOffset);
 }
 
-void GameMap::setBlock(int x, int y, int z, char blockID) {
-    intVect chunckOffset = (intVect(x, y, z) - globalOffset) / Chunck::chunckWidth;
-    intVect gridOffset = intVect(x, y, z) % Chunck::chunckWidth;
-    chunckArray[chunckOffset.x][chunckOffset.y][chunckOffset.z]->changeBlock(gridOffset.x, gridOffset.y, gridOffset.z, blockID);
+void GameMap::changeBlock(int x, int y, int z, char blockID) {
+    //slow, make faster if nessesary
+    changeBlock(intVect(x, y, z), blockID);
+}
+
+Chunck* GameMap::chunckAt(int x, int y, int z) const{
+    return chunckAt(intVect(x, y ,z));
+}
+
+intVect GameMap::gridOffsetAt(int x, int y, int z) {
+    return intVect(x, y, z) % Chunck::chunckWidth;
+}
+
+Chunck *GameMap::chunckAt(const intVect &pos) const {
+    intVect chunckOffset = (pos - globalOffset) / Chunck::chunckWidth;
+    return chunckArray[chunckOffset.x][chunckOffset.y][chunckOffset.z];
+}
+
+char GameMap::valueAt(const intVect &pos) const{
+    return valueAt(pos.x, pos.y, pos.z);
+}
+
+void GameMap::changeBlock(const intVect &pos, char blockID) {
+    intVect gridOffset = gridOffsetAt(pos);
+    chunckAt(pos)->setBlockData(gridOffset, blockID);
+    chunckAt(pos)->writeBlockMesh(gridOffset);
+    for (const intVect &offset : adjancencyTable) {
+        chunckAt(pos + offset)->writeBlockMesh(gridOffsetAt(pos + offset));
+    }
+}
+
+intVect GameMap::gridOffsetAt(const intVect &pos) {
+    return pos % Chunck::chunckWidth;
 }

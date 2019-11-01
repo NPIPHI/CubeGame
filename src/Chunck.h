@@ -31,6 +31,9 @@ public:
     void setMainMap(const GameMap* mainMap);
     void genMesh(const GLuint vertexBuffer, const GLuint UVBuffer, const GLuint indexBuffer, void *bufferOffset);
     void changeBlock(int x, int y, int z, char blockID);
+    void setBlockData(int x, int y, int z, char blockID);
+    void setBlockData(const intVect &pos, char blockID);
+    void writeBlockMesh(const intVect &pos) const;
     Chunck(char *data, intVect position, const GameMap *mainMap);
     char valueAt(intVect pos) const;
 
@@ -47,7 +50,7 @@ private:
     void placeFace(int x, int y, int z, glm::vec3 *vBuffer, glm::vec2 *uvBuffer, GLuint *iBuffer, int bufferOffset,
                    int faceID) const;
     inline int indexAt(int x, int y, int z) const;
-    inline int indexAt(intVect pos) const;
+    inline int indexAt(const intVect &pos) const;
     void writeBlockMesh(int x, int y, int z) const;
 };
 

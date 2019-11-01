@@ -119,7 +119,7 @@ int Chunck::indexAt(int x, int y, int z) const{
     return x + y * Chunck::chunckWidth + z * Chunck::chunckWidth * Chunck::chunckWidth;
 }
 
-int Chunck::indexAt(intVect pos) const {
+int Chunck::indexAt(const intVect &pos) const {
     indexAt(pos.x, pos.y, pos.z);
 }
 
@@ -197,4 +197,16 @@ char Chunck::globalValueAt(int x, int y, int z) const {
 
 void Chunck::setMainMap(const GameMap *mainMap) {
     worldMap = mainMap;
+}
+
+void Chunck::setBlockData(int x, int y, int z, char blockID) {
+    chunckData[indexAt(x, y, z)] = blockID;
+}
+
+void Chunck::setBlockData(const intVect &pos, char blockID) {
+    chunckData[indexAt(pos)] = blockID;
+}
+
+void Chunck::writeBlockMesh(const intVect &pos) const{
+    writeBlockMesh(pos.x, pos.y, pos.z);
 }
