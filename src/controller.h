@@ -14,7 +14,7 @@ static controller* currentController;
 
 class controller {
 public:
-    void poll(GLFWwindow * window);//updates mouse toggle state
+    void poll(const GLFWwindow *window);//updates mouse toggle state
     glm::vec2 getJoystick() const;
     bool getJump() const;
     bool getLeftToggle() const;

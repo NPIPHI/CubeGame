@@ -74,7 +74,7 @@ void controller::mouseButtonCallback(GLFWwindow *window, int button, int action,
     }
 }*/
 
-void controller::poll(GLFWwindow *window) {
+void controller::poll(const GLFWwindow *window) {
     leftToggle = !leftClick && glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
     rightToggle = !rightClick && glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT);
     leftClick = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
