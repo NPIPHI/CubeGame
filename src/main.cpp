@@ -167,7 +167,7 @@ int main(){
 
         glfwSwapBuffers(window);
         glfwPollEvents();
-        Sleep(30);
+        Sleep(16);
     } while(!glfwGetKey(window, GLFW_KEY_ESCAPE) && !glfwWindowShouldClose(window));
 
     glfwStandardInit::terminate({vertexShader});

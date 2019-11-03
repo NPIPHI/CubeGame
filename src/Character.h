@@ -7,9 +7,13 @@
 
 
 #include <glm/vec3.hpp>
+#include "AxisCamera.h"
+#include "GameMap.h"
 
 class Character {
 public:
+    AxisCamera camera;
+    void update(const GameMap& worldMMap);
 private:
     glm::vec3 position;
 };

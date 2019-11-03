@@ -31,7 +31,7 @@ Chunck::Chunck(char *data, intVect position, const GameMap *mainMap) {
 Chunck * Chunck::load(intVect position, const char *directroy) {
     std::FILE* loadFile;
     std::string fileName = std::string(directroy) + std::string(R"(\)") + std::to_string(position.x) + ',' + std::to_string(position.y) + ',' + std::to_string(position.z) + ".txt";
-    if(loadFile = fopen(fileName.c_str(), "rb")){ //doesn't work
+    if(loadFile = fopen(fileName.c_str(), "rb")){
         char buffer[Chunck::chunckSize];
         fread(buffer, Chunck::chunckSize, sizeof(char), loadFile);
         fclose(loadFile);

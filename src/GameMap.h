@@ -23,7 +23,7 @@ public:
 
 private:
     GLuint vBuffer, uvBuffer, iBuffer;
-    static const int chunckLoadWidth = 8;
+    static const int chunckLoadWidth = 10;
     int vertexCount;
     intVect globalOffset;
     Chunck *chunckArray[chunckLoadWidth][chunckLoadWidth][chunckLoadWidth];
