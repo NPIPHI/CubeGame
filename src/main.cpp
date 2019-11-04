@@ -12,6 +12,7 @@
 #include "AxisCamera.h"
 #include "Chunck.h"
 #include "GameMap.h"
+#include "character.h"
 
 void draw(const shader &shader, GLuint vertexBuffer, GLuint uvBuffer, int length);
 
@@ -124,10 +125,10 @@ int main(){
     gameCam.setPosition({0, 0, 5});
     gameCam.setView(window, {0, 0, 0});
 
+    GameMap world = GameMap(vertexID, uvID, indexID);
+    mainMap = &world;
 
-
-    GameMap myMap = GameMap(vertexID, uvID, indexID);
-    mainMap = &myMap;
+    character player(window);
 
     double totalFrameTime = 0;
     int trackedFrames = 0;
@@ -138,25 +139,23 @@ int main(){
         if(glfwGetKey(window, GLFW_KEY_R)) {
             gameCam.setView(window, {0, 0, 0});
         }
-        gameCam.control(window);
-
-        vertexShader.setUniformMatrix4("VIEW", gameCam.getView());
-        wireFrameShader.setUniformMatrix4("VIEW", gameCam.getView());
+        //gameCam.control(window);
+        player.update(world);
+        vertexShader.setUniformMatrix4("VIEW", player.getView());
+        wireFrameShader.setUniformMatrix4("VIEW", player.getView());
 
         if(!glfwGetKey(window, GLFW_KEY_F)){
-            drawIndexed(vertexShader, vertexID, uvID, indexID, myMap.getVertexCount());
-            auto selectedBlock = gameCam.rayCastToBlock(10, myMap); // bad name
+
+            drawIndexed(vertexShader, vertexID, uvID, indexID, world.getVertexCount());
+            auto selectedBlock = player.getSelectedBlock(world); // bad name
             wireFrameShader.setUniformVec3("OFFSET", selectedBlock);
             drawLineIndexed(wireFrameShader, wireFrameVerts, wireFrameIndexes, 24);
-            if(glfwGetKey(window, GLFW_KEY_SPACE)){
-                myMap.changeBlock(selectedBlock.x, selectedBlock.y, selectedBlock.z, 0);
-            }
 
         } else {
             auto timeBefore = std::chrono::system_clock::now();
             draw(vertexShader, axisRefID, uvRefID, 9);
             //drawIndexed(vertexShader, vertexID, uvID, indexID, Chunck::chunckIndexCount);
-            drawIndexed(vertexShader, vertexID, uvID, indexID, myMap.getVertexCount());
+            drawIndexed(vertexShader, vertexID, uvID, indexID, world.getVertexCount());
             glFinish();
             auto timeAfter = std::chrono::system_clock::now();
             std::cout << "Frame Time: " << (timeAfter - timeBefore).count()/1000 << "ns" << std::endl;
@@ -260,7 +259,7 @@ void drawLineIndexed(const shader &shader, GLuint vertexBuffer, GLuint indexBuff
     glDisableVertexAttribArray(0);
 }
 
-void mouseCallBack(GLFWwindow *window, int button, int action, int mods){
+void mouseCallBack(GLFWwindow *window, int button, int action, int mods) {//TODO make part of player
     if(button == GLFW_MOUSE_BUTTON_LEFT) {
         if(action == 1) {
             glm::vec3 selectedBlock = camera->rayCastToBlock(10, *mainMap); // bad name

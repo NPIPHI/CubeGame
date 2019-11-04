@@ -74,7 +74,7 @@ void controller::mouseButtonCallback(GLFWwindow *window, int button, int action,
     }
 }*/
 
-void controller::poll(const GLFWwindow *window) {
+void controller::poll(GLFWwindow *window) {
     leftToggle = !leftClick && glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
     rightToggle = !rightClick && glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT);
     leftClick = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
@@ -84,6 +84,8 @@ void controller::poll(const GLFWwindow *window) {
     left = glfwGetKey(window, GLFW_KEY_A);
     right = glfwGetKey(window, GLFW_KEY_D);
     jump = glfwGetKey(window, GLFW_KEY_SPACE);
+    shift = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT);
+    glfwGetCursorPos(window, &mouseX, &mouseY);
 }
 
 bool controller::getLeftToggle() const {
@@ -95,7 +97,7 @@ bool controller::getRightToggle() const {
 }
 
 glm::vec2 controller::getJoystick() const {
-    return glm::vec2(right-left, forward-back);
+    return glm::vec2(forward - back, left - right);
 }
 
 bool controller::getJump() const {
@@ -108,4 +110,16 @@ bool controller::getRightClick() const {
 
 bool controller::getLeftClick() const {
     return leftClick;
+}
+
+double controller::getMouseX() const {
+    return mouseX;
+}
+
+double controller::getMouseY() const {
+    return mouseY;
+}
+
+bool controller::getShift() const {
+    return shift;
 }

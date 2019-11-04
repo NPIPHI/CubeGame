@@ -8,41 +8,41 @@
 
 using namespace glm;
 
-Camera::Camera(float FOV, float aspectRatio, float nearPlane, float farPlane) {
+camera::camera(float FOV, float aspectRatio, float nearPlane, float farPlane) {
     perspective = glm::perspective(FOV, aspectRatio, nearPlane, farPlane);
     setPosition(vec3(0, 0, 0));
     setRotation(vec3(0, 1, 0), 0);
 }
 
-void Camera::setPosition(const vec3 position) {
+void camera::setPosition(const vec3 position) {
     this->position = position;
     generateView();
 }
 
-const mat4 Camera::getView() {
+const mat4 camera::getView() const {
     return view;
 }
 
-void Camera::generateView() {
+void camera::generateView() {
     view = perspective * glm::translate(rotation, -position);
 }
 
-void Camera::setRotation(const vec3 axis, const float degrees) {
+void camera::setRotation(const vec3 axis, const float degrees) {
     rotation = glm::rotate(mat4(1.0), degrees, axis);
     generateView();
 }
 
-void Camera::rotate(const vec3 axis, const float degrees) {
+void camera::rotate(const vec3 axis, const float degrees) {
     rotation = glm::rotate(rotation, degrees, axis);
     generateView();
 }
 
-void Camera::translate(const vec3 delta) {
+void camera::translate(const vec3 delta) {
     position += delta;
     generateView();
 }
 
-void Camera::lookAt(const vec3 focus) {
+void camera::lookAt(const vec3 focus) {
     rotation = glm::lookAt(vec3(0, 0, 0), position - focus, vec3(0, 1, 0));
     generateView();
 }

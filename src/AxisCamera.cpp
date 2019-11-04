@@ -10,7 +10,7 @@ glm::vec3 intCast(glm::vec3 vector){
     return glm::vec3(int(vector.x), int(vector.y), int(vector.z));
 }
 
-AxisCamera::AxisCamera(float aspectRatio) : Camera(45, aspectRatio, 0.1f, 100.f) {
+AxisCamera::AxisCamera(float aspectRatio) : camera(45, aspectRatio, 0.1f, 100.f) {
     xRot = 0;
     yRot = 0;
     mousePosX = 500;
@@ -21,18 +21,7 @@ AxisCamera::AxisCamera(float aspectRatio) : Camera(45, aspectRatio, 0.1f, 100.f)
 
 void AxisCamera::control(GLFWwindow *window) {
     glfwGetCursorPos(window, &mousePosX, &mousePosY);
-    xRot =  (mousePosX - mouseRefrenceX) * MOUSESENSITVITY;
-    yRot = -(mousePosY - mouseRefrenceY) * MOUSESENSITVITY;
-
-    if(yRot < -pi/2){
-        yRot = -pi/2;
-        mouseRefrenceY = mousePosY - pi/(2*MOUSESENSITVITY);
-    }
-
-    if(yRot > pi/2){
-        yRot = pi/2;
-        mouseRefrenceY = mousePosY + pi/(2*MOUSESENSITVITY);
-    }
+    updateViewFromMouse(mousePosX, mousePosY);
 
     glm::vec4 deltaVect;
     if (glfwGetKey(window, GLFW_KEY_A)) {
@@ -57,11 +46,7 @@ void AxisCamera::control(GLFWwindow *window) {
         deltaVect *= 10;
     }
     position += glm::vec3(deltaVect * glm::rotate(glm::mat4(), float(xRot), glm::vec3(0, 1, 0)));
-    yRot = yRot >  pi/2 ?  pi/2 : yRot;
-    yRot = yRot < -pi/2 ? -pi/2 : yRot;
     setPosition(position);
-    setRotation(glm::vec3(0, 1, 0), xRot);
-    rotate(glm::vec3(glm::cos(xRot+pi), 0, glm::sin(xRot+pi)), yRot);
 }
 
 void AxisCamera::setView(GLFWwindow *window, glm::vec3 target) {
@@ -124,4 +109,37 @@ glm::vec3 AxisCamera::rayCastToPreviousBlock(double maxDistance, const GameMap &
         }
     }
     return glm::vec3(0, 0, 0);
+}
+
+AxisCamera::AxisCamera() : camera(45, 16.f / 9.f, 0.1f, 100.f) {
+    xRot = 0;
+    yRot = 0;
+    mousePosX = 500;
+    mousePosY = 500;
+    mouseRefrenceX = 500;
+    mouseRefrenceY = 500;
+}
+
+void AxisCamera::updateViewFromMouse(double mouseX, double mouseY) {
+    mousePosX = mouseX;
+    mousePosY = mouseY;
+    xRot = (mousePosX - mouseRefrenceX) * MOUSESENSITVITY;
+    yRot = -(mousePosY - mouseRefrenceY) * MOUSESENSITVITY;
+
+    if (yRot < -pi / 2) {
+        yRot = -pi / 2;
+        mouseRefrenceY = mousePosY - pi / (2 * MOUSESENSITVITY);
+    }
+
+    if (yRot > pi / 2) {
+        yRot = pi / 2;
+        mouseRefrenceY = mousePosY + pi / (2 * MOUSESENSITVITY);
+    }
+    setRotation(glm::vec3(0, 1, 0), xRot);
+    rotate(glm::vec3(glm::cos(xRot + pi), 0, glm::sin(xRot + pi)), yRot);
+}
+
+glm::mat2 AxisCamera::getXZtransform() {
+    return glm::mat2(-glm::cos(xRot + pi / 2), -glm::sin(xRot + pi / 2), -glm::sin(xRot + pi / 2),
+                     glm::cos(xRot + pi / 2));//looks messy, but is correct
 }

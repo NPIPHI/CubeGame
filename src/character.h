@@ -13,11 +13,21 @@
 
 class character {
 public:
-    explicit character(const GLFWwindow *window) : window(window);
-    AxisCamera camera;
-    void update(const GameMap& worldMMap);
+    explicit character(GLFWwindow *window);
+
+    AxisCamera viewCamera;
+
+    void update(GameMap &worldMap);
+
+    glm::mat4 getView() const;
+
+    glm::vec3 getSelectedBlock(const GameMap &worldMap);
 private:
-    const GLFWwindow *window;
+    void placeBlock(char blockID, GameMap &worldMap);
+
+    void breakBlock(GameMap &worldMap);
+
+    GLFWwindow *window;
     controller input;
     glm::vec3 position;
 };
