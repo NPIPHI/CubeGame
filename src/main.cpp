@@ -10,7 +10,7 @@
 #include <windows.h>
 #include <chrono>
 #include "AxisCamera.h"
-#include "Chunck.h"
+#include "chunck.h"
 #include "GameMap.h"
 #include "character.h"
 
@@ -106,19 +106,18 @@ int main(){
     GLuint vertexID;
     glGenBuffers(1, &vertexID);
     glBindBuffer(GL_ARRAY_BUFFER, vertexID);
-    glBufferData(GL_ARRAY_BUFFER, Chunck::chunckIndexCount * sizeof(glm::vec3), nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, chunck::chunckIndexCount * sizeof(glm::vec3), nullptr, GL_STATIC_DRAW);
 
     GLuint indexID;
     glGenBuffers(1, &indexID);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexID);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, Chunck::chunckIndexCount * sizeof(GLuint), nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, chunck::chunckIndexCount * sizeof(GLuint), nullptr, GL_STATIC_DRAW);
 
     GLuint uvID;
     glGenBuffers(1, &uvID);
     glBindBuffer(GL_ARRAY_BUFFER, uvID);
-    glBufferData(GL_ARRAY_BUFFER, Chunck::chunckIndexCount * sizeof(glm::vec2), nullptr, GL_STATIC_DRAW); //must be initilized
-
-    glfwSetMouseButtonCallback(window, mouseCallBack);
+    glBufferData(GL_ARRAY_BUFFER, chunck::chunckIndexCount * sizeof(glm::vec2), nullptr,
+                 GL_STATIC_DRAW); //must be initilized
 
     AxisCamera gameCam(1024.f/720.f);
     camera = &gameCam;
@@ -257,19 +256,4 @@ void drawLineIndexed(const shader &shader, GLuint vertexBuffer, GLuint indexBuff
 
     glDrawElements(GL_LINES, length, GL_UNSIGNED_INT, nullptr);
     glDisableVertexAttribArray(0);
-}
-
-void mouseCallBack(GLFWwindow *window, int button, int action, int mods) {//TODO make part of player
-    if(button == GLFW_MOUSE_BUTTON_LEFT) {
-        if(action == 1) {
-            glm::vec3 selectedBlock = camera->rayCastToBlock(10, *mainMap); // bad name
-            mainMap->changeBlock(selectedBlock.x, selectedBlock.y, selectedBlock.z, 0);
-        }
-    }
-    if(button == GLFW_MOUSE_BUTTON_RIGHT) {
-        if(action == 1) {
-            glm::vec3 selectedBlock = camera->rayCastToPreviousBlock(10, *mainMap); // bad name
-            mainMap->changeBlock(selectedBlock.x, selectedBlock.y, selectedBlock.z, 1);
-        }
-    }
 }

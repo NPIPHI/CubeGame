@@ -17,6 +17,7 @@ endif()
 
 
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+# these allow variable changin in the debugger
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -gdwarf-3")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -gdwarf-3")
 # Compile external dependencies 
@@ -68,7 +69,7 @@ add_executable(MineCroft
 		common/camera.cpp
 		common/glfwStandardInit.cpp
 		common/glfwStandardInit.h
-		src/Chunck.cpp src/Chunck.h src/AxisCamera.cpp src/AxisCamera.h src/GameMap.cpp src/GameMap.h src/character.cpp src/character.h src/IntVect.cpp src/IntVect.h src/controller.cpp src/controller.h)
+		src/chunck.cpp src/chunck.h src/AxisCamera.cpp src/AxisCamera.h src/GameMap.cpp src/GameMap.h src/character.cpp src/character.h src/IntVect.cpp src/IntVect.h src/controller.cpp src/controller.h)
 
 add_executable(Test
 		test/test.cpp

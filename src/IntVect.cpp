@@ -4,6 +4,10 @@
 
 #include "IntVect.h"
 
+glm::vec3 intCast(const glm::vec3 vector) {
+    return glm::vec3(int(vector.x), int(vector.y), int(vector.z));
+}
+
 glm::vec3 intVect::operator+(const intVect &addVect) const{
     return glm::vec3(addVect.x + x, addVect.y + y, addVect.z + z);
 }

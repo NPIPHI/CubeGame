@@ -17,24 +17,31 @@ class GameMap;
 
 #define CHUNKWIDTH 8
 
-class Chunck {
+//TODO corners generate mesh incorrectly on change block
+
+class chunck {
 public:
     static const size_t chunckSize = CHUNKWIDTH * CHUNKWIDTH * CHUNKWIDTH;
     static const size_t chunckWidth = CHUNKWIDTH;
     static const size_t chunckIndexCount = CHUNKWIDTH * CHUNKWIDTH * CHUNKWIDTH * 36;
     static const size_t chunckVertexCount = (CHUNKWIDTH + 1) * (CHUNKWIDTH + 1) * (CHUNKWIDTH + 1);
     intVect position{};
-    const static void save(const Chunck *chunck, const char * directory);
-    static Chunck * load(intVect position, const char * directroy);
-    static Chunck * generate(intVect position);
-    static void deLoad(Chunck *deleteChunck);
+
+    const static void save(const chunck *chunck, const char *directory);
+
+    static chunck *load(intVect position, const char *directroy);
+
+    static chunck *generate(intVect position);
+
+    static void deLoad(chunck *deleteChunck);
     void setMainMap(const GameMap* mainMap);
     void genMesh(const GLuint vertexBuffer, const GLuint UVBuffer, const GLuint indexBuffer, void *bufferOffset);
     void changeBlock(int x, int y, int z, char blockID);
     void setBlockData(int x, int y, int z, char blockID);
     void setBlockData(const intVect &pos, char blockID);
     void writeBlockMesh(const intVect &pos) const;
-    Chunck(char *data, intVect position, const GameMap *mainMap);
+
+    chunck(char *data, intVect position, const GameMap *mainMap);
     char valueAt(intVect pos) const;
 
 private:

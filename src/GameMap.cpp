@@ -3,10 +3,12 @@
 //
 
 #include "GameMap.h"
+#include "iostream"
+
 
 GameMap::GameMap(GLuint vBuffer, GLuint uvBuffer, GLuint iBuffer) {
     globalOffset = {0, 0, 0};
-    vertexCount = Chunck::chunckIndexCount * chunckLoadWidth * chunckLoadWidth * chunckLoadWidth;
+    vertexCount = chunck::chunckIndexCount * chunckLoadWidth * chunckLoadWidth * chunckLoadWidth;
     this->vBuffer = vBuffer;
     this->uvBuffer = uvBuffer;
     this->iBuffer = iBuffer;
@@ -22,7 +24,9 @@ GameMap::GameMap(GLuint vBuffer, GLuint uvBuffer, GLuint iBuffer) {
     for(int x = 0; x < chunckLoadWidth; x ++){
         for(int y = 0; y < chunckLoadWidth; y ++) {
             for (int z = 0; z < chunckLoadWidth; z++) {
-                chunckArray[x][y][z] = Chunck::load({globalOffset.x + x*CHUNKWIDTH, globalOffset.y + y*CHUNKWIDTH, globalOffset.z + z*CHUNKWIDTH}, R"(C:\Users\16182\Documents\CPPStuff\MineCroft\mapData)");
+                chunckArray[x][y][z] = chunck::load({globalOffset.x + x * CHUNKWIDTH, globalOffset.y + y * CHUNKWIDTH,
+                                                     globalOffset.z + z * CHUNKWIDTH},
+                                                    R"(C:\Users\16182\Documents\CPPStuff\MineCroft\mapData)");
                 chunckArray[x][y][z]->setMainMap(this);
             }
         }
@@ -31,7 +35,7 @@ GameMap::GameMap(GLuint vBuffer, GLuint uvBuffer, GLuint iBuffer) {
         for(int y = 0; y < chunckLoadWidth; y ++) {
             for (int z = 0; z < chunckLoadWidth; z++) {
                 chunckArray[x][y][z]->genMesh(vBuffer, uvBuffer, iBuffer,
-                                              reinterpret_cast<void *>(Chunck::chunckIndexCount *
+                                              reinterpret_cast<void *>(chunck::chunckIndexCount *
                                                                        (x + chunckLoadWidth * y +
                                                                         chunckLoadWidth * chunckLoadWidth * z)));
             }
@@ -47,7 +51,7 @@ GameMap::~GameMap() {
     for(int x = 0; x < chunckLoadWidth; x ++){
         for(int y = 0; y < chunckLoadWidth; y ++) {
             for (int z = 0; z < chunckLoadWidth; z++) {
-                Chunck::deLoad(chunckArray[x][y][z]);
+                chunck::deLoad(chunckArray[x][y][z]);
             }
         }
     }
@@ -55,13 +59,13 @@ GameMap::~GameMap() {
 
 char GameMap::valueAt(int x, int y, int z) const{
     if(x < globalOffset.x || y < globalOffset.y || z < globalOffset.z ||
-        x >= globalOffset.x + chunckLoadWidth * Chunck::chunckWidth ||
-        y >= globalOffset.y + chunckLoadWidth * Chunck::chunckWidth ||
-        z >= globalOffset.z + chunckLoadWidth * Chunck::chunckWidth){
+       x >= globalOffset.x + chunckLoadWidth * chunck::chunckWidth ||
+       y >= globalOffset.y + chunckLoadWidth * chunck::chunckWidth ||
+       z >= globalOffset.z + chunckLoadWidth * chunck::chunckWidth) {
         return 0;
     }
-    intVect chunckOffset = (intVect(x, y, z) - globalOffset) / Chunck::chunckWidth;
-    intVect gridOffset = intVect(x, y, z) % Chunck::chunckWidth;
+    intVect chunckOffset = (intVect(x, y, z) - globalOffset) / chunck::chunckWidth;
+    intVect gridOffset = intVect(x, y, z) % chunck::chunckWidth;
     chunckArray[chunckOffset.x][chunckOffset.y][chunckOffset.z]->valueAt(gridOffset);
 }
 
@@ -70,16 +74,21 @@ void GameMap::changeBlock(int x, int y, int z, char blockID) {
     changeBlock(intVect(x, y, z), blockID);
 }
 
-Chunck* GameMap::chunckAt(int x, int y, int z) const{
+chunck *GameMap::chunckAt(int x, int y, int z) const {
     return chunckAt(intVect(x, y ,z));
 }
 
 intVect GameMap::gridOffsetAt(int x, int y, int z) {
-    return intVect(x, y, z) % Chunck::chunckWidth;
+    return intVect(x, y, z) % chunck::chunckWidth;
 }
 
-Chunck *GameMap::chunckAt(const intVect &pos) const {
-    intVect chunckOffset = (pos - globalOffset) / Chunck::chunckWidth;
+chunck *GameMap::chunckAt(const intVect &pos) const {
+    intVect chunckOffset = (pos - globalOffset) / chunck::chunckWidth;
+    if (chunckOffset.x >= chunckLoadWidth || chunckOffset.x < 0 ||
+        chunckOffset.y >= chunckLoadWidth || chunckOffset.y < 0 ||
+        chunckOffset.z >= chunckLoadWidth || chunckOffset.z < 0) {
+        return nullptr;
+    }
     return chunckArray[chunckOffset.x][chunckOffset.y][chunckOffset.z];
 }
 
@@ -92,10 +101,13 @@ void GameMap::changeBlock(const intVect &pos, char blockID) {
     chunckAt(pos)->setBlockData(gridOffset, blockID);
     chunckAt(pos)->writeBlockMesh(gridOffset);
     for (const intVect &offset : adjancencyTable) {
-        chunckAt(pos + offset)->writeBlockMesh(gridOffsetAt(pos + offset));
+        chunck *effectedChuck = chunckAt(pos + offset);
+        if (effectedChuck != nullptr) {
+            chunckAt(pos + offset)->writeBlockMesh(gridOffsetAt(pos + offset));
+        }
     }
 }
 
 intVect GameMap::gridOffsetAt(const intVect &pos) {
-    return pos % Chunck::chunckWidth;
+    return pos % chunck::chunckWidth;
 }

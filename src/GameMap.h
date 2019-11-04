@@ -5,7 +5,7 @@
 #ifndef MINECROFT_GAMEMAP_H
 #define MINECROFT_GAMEMAP_H
 
-#include "Chunck.h"
+#include "chunck.h"
 #include "IntVect.h"
 #include <array>
 
@@ -18,15 +18,17 @@ public:
     char valueAt(const intVect &pos) const;
     void changeBlock(int x, int y, int z, char blockID);
     void changeBlock(const intVect &pos, char blockID);
-    Chunck* chunckAt(int x, int y, int z) const;
-    Chunck* chunckAt(const intVect &pos) const;
+
+    chunck *chunckAt(int x, int y, int z) const;
+
+    chunck *chunckAt(const intVect &pos) const;
 
 private:
     GLuint vBuffer, uvBuffer, iBuffer;
     static const int chunckLoadWidth = 2;
     int vertexCount;
     intVect globalOffset;
-    Chunck *chunckArray[chunckLoadWidth][chunckLoadWidth][chunckLoadWidth];
+    chunck *chunckArray[chunckLoadWidth][chunckLoadWidth][chunckLoadWidth];
 
     inline intVect gridOffsetAt(int x, int y, int z);
     inline intVect gridOffsetAt(const intVect &pos);

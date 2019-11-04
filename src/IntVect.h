@@ -22,5 +22,7 @@ struct intVect{
     intVect operator%(const int modulo) const;
 };
 
+glm::vec3 intCast(const glm::vec3 vector);
+
 
 #endif //MINECROFT_INTVECT_H

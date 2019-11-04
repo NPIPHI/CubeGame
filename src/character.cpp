@@ -10,10 +10,10 @@
 void character::update(GameMap &worldMap) {
     input.poll(window);
     viewCamera.updateViewFromMouse(input.getMouseX(), input.getMouseY());
-    glm::vec2 delta = viewCamera.getXZtransform() * input.getJoystick();
-    position.x += delta.x;
-    position.z += delta.y;
-    position.y += (input.getJump() - input.getShift());
+    glm::vec2 XZdelta = viewCamera.getXZtransform() * input.getJoystick();
+    glm::vec3 delta = glm::vec3(XZdelta.x, (input.getJump() - input.getShift()), XZdelta.y);
+    delta *= 0.1;
+    position += delta;
 
     viewCamera.setPosition(position);
     if (input.getLeftToggle()) {
