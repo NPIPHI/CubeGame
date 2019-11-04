@@ -45,3 +45,7 @@ intVect::intVect(int value) {
     y = value;
     z = value;
 }
+
+glm::vec3 intVect::vec3() const {
+    return glm::vec3(x, y, z);
+}

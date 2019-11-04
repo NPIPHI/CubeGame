@@ -15,9 +15,9 @@ struct intVect{
     intVect() = default;
     intVect(int x, int y, int z);
     intVect(glm::vec3 vect);
-
     intVect(int value);
 
+    glm::vec3 vec3() const;
     intVect operator+(const intVect &addVect) const;
     intVect operator-(const intVect &minusVect) const;
     intVect operator/(const double scalar) const;

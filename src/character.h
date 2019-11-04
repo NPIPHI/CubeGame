@@ -25,6 +25,7 @@ public:
 private:
     void placeBlock(char blockID, GameMap &worldMap);
 
+    void collisionTest(const GameMap &worldMap);
     void breakBlock(GameMap &worldMap);
 
     GLFWwindow *window;

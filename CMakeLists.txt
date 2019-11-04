@@ -69,7 +69,7 @@ add_executable(MineCroft
 		common/camera.cpp
 		common/glfwStandardInit.cpp
 		common/glfwStandardInit.h
-		src/chunck.cpp src/chunck.h src/AxisCamera.cpp src/AxisCamera.h src/GameMap.cpp src/GameMap.h src/character.cpp src/character.h src/IntVect.cpp src/IntVect.h src/controller.cpp src/controller.h)
+        src/chunck.cpp src/chunck.h src/AxisCamera.cpp src/AxisCamera.h src/GameMap.cpp src/GameMap.h src/character.cpp src/character.h src/IntVect.cpp src/IntVect.h src/controller.cpp src/controller.h src/geometry.cpp src/geometry.h)
 
 add_executable(Test
 		test/test.cpp
