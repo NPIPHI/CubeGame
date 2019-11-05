@@ -16,7 +16,7 @@ ejectData axisCube::intersect(const axisCube &other) const {
             eject.corner = true;
         };
         if (axisDistance < eject.distance) {
-            if (!fabsf(eject.distance - axisDistance) < ejectData::cornerThreashold) {
+            if (fabsf(eject.distance - axisDistance) >= ejectData::cornerThreashold) {
                 eject.corner = false;
             }
 
