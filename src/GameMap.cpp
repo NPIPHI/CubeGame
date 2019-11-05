@@ -66,7 +66,7 @@ char GameMap::valueAt(int x, int y, int z) const{
     }
     intVect chunckOffset = (intVect(x, y, z) - globalOffset) / chunck::chunckWidth;
     intVect gridOffset = intVect(x, y, z) % chunck::chunckWidth;
-    chunckArray[chunckOffset.x][chunckOffset.y][chunckOffset.z]->valueAt(gridOffset);
+    return chunckArray[chunckOffset.x][chunckOffset.y][chunckOffset.z]->valueAt(gridOffset);
 }
 
 void GameMap::changeBlock(int x, int y, int z, char blockID) {

@@ -124,7 +124,7 @@ int chunck::indexAt(int x, int y, int z) const {
 }
 
 int chunck::indexAt(const intVect &pos) const {
-    indexAt(pos.x, pos.y, pos.z);
+    return indexAt(pos.x, pos.y, pos.z);
 }
 
 char chunck::valueAt(int x, int y, int z) const {

@@ -123,3 +123,7 @@ double controller::getMouseY() const {
 bool controller::getShift() const {
     return shift;
 }
+
+controller::controller() {
+
+}

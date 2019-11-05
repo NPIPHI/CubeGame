@@ -4,6 +4,7 @@
 
 #include <glm/glm.hpp>
 #include "geometry.h"
+#include <iostream>
 
 ejectData axisCube::intersect(const axisCube &other) const {
     ejectData eject = {glm::vec3(0), 100000000.f, true, false};

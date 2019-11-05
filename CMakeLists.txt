@@ -34,7 +34,6 @@ if(INCLUDE_DISTRIB)
 endif(INCLUDE_DISTRIB)
 
 
-
 include_directories(
 	external/AntTweakBar-1.16/include/
 	external/glfw-3.1.2/include/

@@ -13,7 +13,7 @@ struct ejectData {
     float distance;
     bool intersects;
     bool corner;
-    static constexpr float cornerThreashold = 0.15;
+    static constexpr float cornerThreashold = 0.05;
 };
 
 class axisCube {

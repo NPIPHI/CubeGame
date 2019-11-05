@@ -7,15 +7,35 @@
 #include <iostream>
 #include <GLM/vec3.hpp>
 #include <GLM/mat2x2.hpp>
+#include <glm/glm.hpp>
+
+character::character(GLFWwindow *window) {
+    this->window = window;
+    position = glm::vec3(10, 40, 10);
+    velocity = glm::vec3(0);
+    grounded = false;
+    walking = false;
+    input = controller();
+    viewCamera = AxisCamera(1024.f / 720.f);
+    viewCamera.setPosition(position);
+    viewCamera.setView(window, position + glm::vec3(5, -1, 0));
+}
 
 void character::update(GameMap &worldMap) {
     input.poll(window);
     viewCamera.updateViewFromMouse(input.getMouseX(), input.getMouseY());
+
     glm::vec2 XZdelta = viewCamera.getXZtransform() * input.getJoystick();
-    glm::vec3 delta = glm::vec3(XZdelta.x, (input.getJump() - input.getShift()), XZdelta.y);
-    delta *= 0.1;
-    position += delta;
+    glm::vec3 acceleration = glm::vec3(XZdelta.x, 0, XZdelta.y);
+    walking = glm::length(acceleration) > 0.1;
+    acceleration *= legForce / (frameRate * mass);
+    velocity += acceleration;
+    applyPhysics();
+    position += (velocity / frameRate);
+
+    grounded = false;
     collisionTest(worldMap);
+
     viewCamera.setPosition(position);
     if (input.getLeftToggle()) {
         breakBlock(worldMap);
@@ -23,15 +43,12 @@ void character::update(GameMap &worldMap) {
     if (input.getRightToggle()) {
         placeBlock(1, worldMap);
     }
+    if (input.getJump() && grounded) {
+        velocity.y += 5;
+        grounded = false;
+    }
 }
 
-character::character(GLFWwindow *window) {
-    this->window = window;
-    position = glm::vec3(10, 20, 10);
-    viewCamera = AxisCamera(1024.f / 720.f);
-    viewCamera.setPosition(position);
-    viewCamera.setView(window, {15, 18, 10});
-}
 
 void character::placeBlock(char blockID, GameMap &worldMap) {
     glm::vec3 selectedBlock = viewCamera.rayCastToPreviousBlock(10, worldMap);
@@ -68,6 +85,27 @@ void character::collisionTest(const GameMap &worldMap) {
         if (collision.intersects && !collision.corner) {
             position += collision.normal * collision.distance;
             collisionBox += collision.normal * collision.distance;
+            velocity -= glm::dot(velocity, collision.normal) * collision.normal;
+            if (collision.normal.y > 0.5) {
+                grounded = true;
+            }
         }
     }
+}
+
+void character::applyPhysics() {
+    glm::vec3 airResistance, groundResistance, gravityForce;
+    float normalForce = (gravity * mass);
+    gravityForce = glm::vec3(0, -gravity * mass, 0);
+    airResistance = -glm::normalize(velocity) * glm::dot(velocity, velocity) * airResistanceConstant;
+    if (grounded && !walking) {
+        groundResistance = -glm::normalize(glm::vec3(velocity.x, 0, velocity.z)) * groundFriction * normalForce;
+    } else {
+        groundResistance = glm::vec3(0);
+    }
+    if (glm::length(velocity) == 0) {
+        groundResistance = glm::vec3(0);
+        airResistance = glm::vec3(0);
+    }
+    velocity += (airResistance + groundResistance + gravityForce) / (mass * frameRate);
 }

@@ -4,11 +4,12 @@
 
 #include <winuser.h>
 #include <windows.h>
+#include <iostream>
 
+int return5() {
+    5;
+}
 
 int main(){
-    for(int i = 0; i < 200; i ++) {
-        SetCursorPos(5 * i, 5 * i);
-        Sleep(16);
-    }
+    std::cout << return5() << std::endl;
 }
