@@ -36,11 +36,13 @@ private:
     glm::vec3 position;
     glm::vec3 velocity;
     const float mass = 60;
-    const float groundFriction = 1; //idk
+    const float groundFriction = 2; //idk
     const float airResistanceConstant = 3; //idk
     const float gravity = 9.81; //m/ss
     const float frameRate = 30; //fps
     const float legForce = 840; //watts
+    const float walkingFrictionFraction = 0.2;
+    const float staticFrictonThreashold = 0.3;
 };
 
 

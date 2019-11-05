@@ -98,8 +98,18 @@ void character::applyPhysics() {
     float normalForce = (gravity * mass);
     gravityForce = glm::vec3(0, -gravity * mass, 0);
     airResistance = -glm::normalize(velocity) * glm::dot(velocity, velocity) * airResistanceConstant;
-    if (grounded && !walking) {
-        groundResistance = -glm::normalize(glm::vec3(velocity.x, 0, velocity.z)) * groundFriction * normalForce;
+    if (grounded) {
+        if (glm::length(glm::vec2(velocity.x, velocity.z)) > staticFrictonThreashold) {
+            if (walking) {
+                groundResistance =
+                        -glm::normalize(glm::vec3(velocity.x, 0, velocity.z)) * groundFriction * normalForce *
+                        walkingFrictionFraction;
+            } else {
+                groundResistance = -glm::normalize(glm::vec3(velocity.x, 0, velocity.z)) * groundFriction * normalForce;
+            }
+        } else {
+            groundResistance = -glm::vec3(velocity.x, 0, velocity.z) * mass * frameRate;
+        }
     } else {
         groundResistance = glm::vec3(0);
     }
