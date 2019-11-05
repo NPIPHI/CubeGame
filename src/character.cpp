@@ -117,5 +117,8 @@ void character::applyPhysics() {
         groundResistance = glm::vec3(0);
         airResistance = glm::vec3(0);
     }
+    if (glm::dot(velocity, glm::vec3(velocity.x, 0, velocity.z) + groundResistance / (mass * frameRate)) < 0) {
+        groundResistance = -glm::vec3(velocity.x, 0, velocity.z) * mass * frameRate;
+    }
     velocity += (airResistance + groundResistance + gravityForce) / (mass * frameRate);
 }
