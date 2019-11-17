@@ -106,4 +106,5 @@ static const glm::vec3 cubeMesh[]{
         glm::vec3{1.0f,0, 1.0f}
 };
 
+#undef CHUNCKWIDTH
 #endif //MINECROFT_CHUNCK_H

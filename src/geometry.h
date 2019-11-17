@@ -22,6 +22,8 @@ public:
 
     axisCube(const glm::vec3 c1, const glm::vec3 c2);
 
+    axisCube() = default;
+
     ejectData intersect(const axisCube &other) const;
 
     void setPos(glm::vec3 position);

@@ -7,6 +7,7 @@
 
 
 #include <glm/vec3.hpp>
+#include "geometry.h"
 #include "AxisCamera.h"
 #include "GameMap.h"
 #include "controller.h"
@@ -35,6 +36,7 @@ private:
     controller input;
     glm::vec3 position;
     glm::vec3 velocity;
+    axisCube hitBox;
     const float mass = 60;
     const float groundFriction = 5; //idk, larger to add snappiness
     const float airResistanceConstant = 3; //idk

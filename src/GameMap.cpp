@@ -2,6 +2,7 @@
 // Created by 16182 on 10/27/2019.
 //
 
+#include <glm/glm.hpp>
 #include "GameMap.h"
 #include "iostream"
 
@@ -113,4 +114,37 @@ void GameMap::changeBlock(const intVect &pos, char blockID) {
 
 intVect GameMap::gridOffsetAt(const intVect &pos) {
     return pos % chunck::chunckWidth;
+}
+
+void GameMap::shiftChuncks(const intVect &shift) {//must bet axis aligned
+    if (glm::length(shift.vec3()) != 1) {
+        throw "must be axis aligned";
+    }
+    chunck *deleteChuncks[chunckLoadWidth][chunckLoadWidth];
+    intVect ortho1, ortho2;
+    if (shift.x) {
+        ortho1.y = 1;
+        ortho2.z = 1;
+    } else if (shift.y) {
+        ortho1.x = 1;
+        ortho2.z = 1;
+    } else {
+        ortho1.x = 1;
+        ortho2.y = 1;
+    }
+    for (intVect offset1 = 0; offset1.length() < chunckLoadWidth; offset1 += ortho1) {
+        for (intVect offset2 = 0; offset2.length() < chunckLoadWidth; offset2 += ortho2) {
+            if (shift.x + shift.y + shift.z < 0) {
+
+            } else {
+                for (intVect shiftDimension = 0; shiftDimension.length() < chunckLoadWidth; shiftDimension += shift) {
+
+                }
+            }
+        }
+    }
+}
+
+chunck *&GameMap::chunckAtIndex(const intVect &pos) {
+    return chunckArray[pos.x][pos.y][pos.z];
 }

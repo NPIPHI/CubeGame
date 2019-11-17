@@ -13,6 +13,7 @@ character::character(GLFWwindow *window) {
     this->window = window;
     position = glm::vec3(10, 40, 10);
     velocity = glm::vec3(0);
+    hitBox = axisCube(position - glm::vec3(0.3, 1.5, 0.3), position + glm::vec3(0.3, 0.5, 0.3));
     grounded = false;
     walking = false;
     input = controller();
@@ -32,6 +33,7 @@ void character::update(GameMap &worldMap) {
     velocity += acceleration;
     applyPhysics();
     position += (velocity / frameRate);
+    hitBox = axisCube(position - glm::vec3(0.3, 1.5, 0.3), position + glm::vec3(0.3, 0.5, 0.3));
 
     grounded = false;
     collisionTest(worldMap);
@@ -52,7 +54,11 @@ void character::update(GameMap &worldMap) {
 
 void character::placeBlock(char blockID, GameMap &worldMap) {
     glm::vec3 selectedBlock = viewCamera.rayCastToPreviousBlock(10, worldMap);
-    worldMap.changeBlock(selectedBlock, blockID);
+    if (unitCube(intVect(selectedBlock)).intersect(hitBox).intersects) {
+
+    } else {
+        worldMap.changeBlock(selectedBlock, blockID);
+    }
 }
 
 void character::breakBlock(GameMap &worldMap) {
@@ -70,7 +76,7 @@ glm::vec3 character::getSelectedBlock(const GameMap &worldMap) {
 
 void character::collisionTest(const GameMap &worldMap) {
     std::vector<axisCube> possibleCubes;
-    axisCube collisionBox = axisCube(position - glm::vec3(0.3, 1.5, 0.3), position + glm::vec3(0.3, 0.5, 0.3));
+    hitBox = axisCube(position - glm::vec3(0.3, 1.5, 0.3), position + glm::vec3(0.3, 0.5, 0.3));
     for (int x = -1; x <= 1; x++) {
         for (int y = -2; y <= 1; y++) {
             for (int z = -1; z <= 1; z++) {
@@ -81,10 +87,10 @@ void character::collisionTest(const GameMap &worldMap) {
         }
     }
     for (const axisCube &cube : possibleCubes) {
-        ejectData collision = collisionBox.intersect(cube);
+        ejectData collision = hitBox.intersect(cube);
         if (collision.intersects && !collision.corner) {
             position += collision.normal * collision.distance;
-            collisionBox += collision.normal * collision.distance;
+            hitBox += collision.normal * collision.distance;
             velocity -= glm::dot(velocity, collision.normal) * collision.normal;
             if (collision.normal.y > 0.5) {
                 grounded = true;

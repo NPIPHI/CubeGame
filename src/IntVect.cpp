@@ -2,6 +2,7 @@
 // Created by 16182 on 10/31/2019.
 //
 
+#include <cmath>
 #include "IntVect.h"
 
 glm::vec3 intCast(const glm::vec3 vector) {
@@ -48,4 +49,15 @@ intVect::intVect(int value) {
 
 glm::vec3 intVect::vec3() const {
     return glm::vec3(x, y, z);
+}
+
+float intVect::length() const {
+    return std::sqrt(x * x + y * y + z * z);
+}
+
+intVect intVect::operator+=(const intVect &addVect) {
+    x += addVect.x;
+    y += addVect.y;
+    z += addVect.z;
+    return intVect(x, y, z);
 }

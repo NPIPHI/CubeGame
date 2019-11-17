@@ -19,8 +19,9 @@ public:
     void changeBlock(int x, int y, int z, char blockID);
     void changeBlock(const intVect &pos, char blockID);
 
-    chunck *chunckAt(int x, int y, int z) const;
+    void shiftChuncks(const intVect &shift);
 
+    chunck *chunckAt(int x, int y, int z) const;
     chunck *chunckAt(const intVect &pos) const;
 
 private:
@@ -32,6 +33,8 @@ private:
 
     inline intVect gridOffsetAt(int x, int y, int z);
     inline intVect gridOffsetAt(const intVect &pos);
+
+    chunck *&chunckAtIndex(const intVect &pos);
 };
 
 static const std::array<intVect, 6> adjancencyTable = {

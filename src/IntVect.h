@@ -18,8 +18,12 @@ struct intVect{
     intVect(int value);
 
     glm::vec3 vec3() const;
+
+    float length() const;
     intVect operator+(const intVect &addVect) const;
     intVect operator-(const intVect &minusVect) const;
+
+    intVect operator+=(const intVect &addVect);
     intVect operator/(const double scalar) const;
     intVect operator*(const double scalar) const;
     intVect operator%(const int modulo) const;
