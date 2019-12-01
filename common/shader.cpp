@@ -110,30 +110,35 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
 	return ProgramID;
 }
 
-shader::shader(const char *vertex_file_path, const char *fragment_file_path, std::vector<std::string> uniforms) {
+shader::shader(const char *vertex_file_path, const char *fragment_file_path, const vector<string> &uniforms) {
     shaderID = LoadShaders(vertex_file_path, fragment_file_path);
     for (const std::string& uniformName: uniforms) {
-        this->uniforms.insert({uniformName, {glGetUniformLocation(shaderID, uniformName.c_str()), glmType::none}});
+        this->uniforms.insert({uniformName,
+                               uniform(glGetUniformLocation(shaderID, uniformName.c_str()), glmType::none,
+                                       uniformContainer())
+                              });
     }
 }
 
 void shader::passUniforms() const{
     for (const auto& uniform: uniforms) {
-        if(uniform.second.second == glmType::mat4){
-            glUniformMatrix4fv(uniform.second.first, 1, GL_FALSE, &matrix4[0][0]);
+        if (uniform.second.type == glmType::mat4) {
+            glUniformMatrix4fv(uniform.second.location, 1, GL_FALSE, &uniform.second.value.mat4[0][0]);
         }
-        if(uniform.second.second == glmType::vec3){
-            glUniform3fv(uniform.second.first, 1, &vector3[0]);
+        if (uniform.second.type == glmType::vec3) {
+            glUniform3fv(uniform.second.location, 1, &uniform.second.value.vec3[0]);
         }
     }
 }
 
 void shader::setUniformVec3(const char *name, const glm::vec3 &value) {
     vector3 = value;
-    uniforms.at(name).second = glmType::vec3;
+    uniforms.at(name).value = value;
+    uniforms.at(name).type = glmType::vec3;
 }
 
 void shader::setUniformMatrix4(const char *name, const glm::mat4 &value) {
     matrix4 = value;
-    uniforms.at(name).second = glmType::mat4;
+    uniforms.at(name).value = value;
+    uniforms.at(name).type = glmType::mat4;
 }
